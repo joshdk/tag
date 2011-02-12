@@ -10,8 +10,10 @@
 int resize(void **ptr,int size,int osize,int nsize){
 	char *temp=calloc(size,nsize);
 	if(temp==NULL)return 0;
-	memcpy(temp,*ptr,size*osize);
-	free(*ptr);
+	if(*ptr!=NULL){
+		memcpy(temp,*ptr,size*osize);
+		free(*ptr);
+	}
 	(*ptr)=temp;
 	return 1;
 }

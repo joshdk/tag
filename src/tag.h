@@ -9,7 +9,7 @@
 #include <libgen.h>
 #include <dirent.h>
 #include "dsv.h"
-#define DEBUG 0
+#define DEBUG 1
 #include "debug.h"
 
 //#include <errno.h>
@@ -166,7 +166,7 @@ int modify_tagrow(struct tagrow *row,char *tag,int action){
 
 		resize((void**)&(row->tags),sizeof(char**),row->len,row->len+1);
 		row->len++;
-		row->tags[row->len-1]=calloc(sizeof(char),strlen(tag+1)+1);
+		row->tags[row->len-1]=calloc(sizeof(char),strlen(tag)+1);
 		strcpy(row->tags[row->len-1],tag);
 		debugf("adding tag [%s]\n",tag);
 	}else if(action==2 || action==3 || action==4){
@@ -301,12 +301,10 @@ int tag_tagfile(FILE *stream,char *path,char *name,char **tags,int tagc){
 		lines[llen].name=calloc(sizeof(char),strlen(name)+1);
 		strcpy(lines[llen].name,name);
 		lines[llen].len=0;
+		lines[llen].tags=NULL;
 		offset=llen;
 		llen++;
 	}
-
-
-//	puts("here");
 
 
 	int trip=0;
