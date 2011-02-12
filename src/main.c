@@ -4,9 +4,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include "tag.h"
+//#define DEBUG 1
+//#include "debug.h"
 
 
 int main(int argc,char **argv){
+
 
 	if(argc<2){
 		//error, missing parameters

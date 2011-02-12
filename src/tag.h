@@ -9,6 +9,8 @@
 #include <libgen.h>
 #include <dirent.h>
 #include "dsv.h"
+#define DEBUG 0
+#include "debug.h"
 
 //#include <errno.h>
 
@@ -112,72 +114,92 @@ int get_path_and_name(const char *target,char **path,char **name){
 
 
 
+//int filter_blank_and_null(void *val,int size,int piece,void *un1){
+//	char *str=(char *)val;
+//	debugf("filter_blank_and_null(%s)\n",str);
+//	if(str==NULL || !strlen(str)){
+//		return 1;
+//	}
+//	return 0;
+//}
 
 
 
+//int filter_array(void ***array,int size,int *count,void *val,int (*match)(void *,int,int,void *)){
+//	int rlen=0,rsize=*count;
+//	void **result=calloc(size,rsize);
+//	for(int n=0;n<rsize;++n){
+//		if(!(*match)(   *((*array)+n),rsize,n,val    )    ){
+//			result[rlen++]=*((*array)+n);
+//		}else{
+//			free(*((*array)+n));
+//		}
+//	}
+//	
+////	for(int n=0;n<rlen;++n){
+////		printf("new array: [%s]\n",*(result+n));
+////	}
+//
+//	free(*array);
+//	*array=result;
+//	*count=rlen;
+//
+//	return 0;
+//}
 
 
+int modify_tagrow(struct tagrow *row,char *tag,int action){
 
+	debugf("running against [%s] with [%d]\n",tag,action);
+	debugf("tag count [%d]\n",row->len);
 
+	if(action==1){
+		int trip=0;
+		for(int n=0;n<row->len;++n){
+			if(!strcmp(row->tags[n],tag)){
+				debugf("duplicate tag +[%s]\n",row->tags[n]);
+				trip=1;
+				break;
+			}
+		}
+		if(trip)return 0;//duplicate tag. no point in adding it again...
 
-
-
-
-int full_negative(void *val,int size,int piece,void *tag){
-	printf("full_negative(): comparing [%s] and [%s]\n",(char *)val,(char *)tag);
-	if(!strcmp(val,tag)){
-		return 1;
-	}
-	return 0;
-}
-
-int partial_positive(void *val,int size,int piece,void *tag){
-	printf("partial_positive(): comparing [%s] and [%s]\n",(char *)val,(char *)tag);
-	if(strstr(val,tag)){
-		return 1;
-	}
-	return 0;
-}
-
-int partial_negative(void *val,int size,int piece,void *tag){
-	printf("partial_negative(): comparing [%s] and [%s]\n",(char *)val,(char *)tag);
-	if(!strstr(val,tag)){
-		return 1;
-	}
-	return 0;
-}
-
-
-int filter_blank_and_null(void *val,int size,int piece,void *un1){
-	char *str=(char *)val;
-	printf("filter_blank_and_null(%s)\n",str);
-	if(str==NULL || !strlen(str)){
-		return 1;
-	}
-	return 0;
-}
-
-
-
-int filter_array(void ***array,int size,int *count,void *val,int (*match)(void *,int,int,void *)){
-	int rlen=0,rsize=*count;
-	void **result=calloc(size,rsize);
-	for(int n=0;n<rsize;++n){
-		if(!(*match)(   *((*array)+n),rsize,n,val    )    ){
-			result[rlen++]=*((*array)+n);
-		}else{
-			free(*((*array)+n));
+		resize((void**)&(row->tags),sizeof(char**),row->len,row->len+1);
+		row->len++;
+		row->tags[row->len-1]=calloc(sizeof(char),strlen(tag+1)+1);
+		strcpy(row->tags[row->len-1],tag);
+		debugf("adding tag [%s]\n",tag);
+	}else if(action==2 || action==3 || action==4){
+		for(int n=0;n<row->len;++n){
+			int remove=0;
+			switch(action){
+				case 2:
+					if(!strcmp(row->tags[n],tag)){
+						debugf("removing tag -[%s]\n",row->tags[n]);
+						remove=1;
+					}
+					break;
+				case 3:
+					if(strstr(row->tags[n],tag)){
+						debugf("removing tag :[%s]\n",row->tags[n]);
+						remove=1;
+					}
+					break;
+				case 4:
+					if(!strstr(row->tags[n],tag)){
+						debugf("removing tag .[%s]\n",row->tags[n]);
+						remove=1;
+					}
+					break;
+			}
+			if(!remove)continue;
+			for(int m=n+1;m<row->len;++m){
+				row->tags[m-1]=row->tags[m];
+			}
+			row->len--;
+			n--;
 		}
 	}
-	
-//	for(int n=0;n<rlen;++n){
-//		printf("new array: [%s]\n",*(result+n));
-//	}
-
-	free(*array);
-	*array=result;
-	*count=rlen;
-
 	return 0;
 }
 
@@ -187,7 +209,7 @@ int filter_array(void ***array,int size,int *count,void *val,int (*match)(void *
 int query_tagfile(FILE *stream,const char *path,const char *name){
 	FILE *tagf=NULL;
 	if((tagf=fopen(path,"r"))==NULL){
-		puts("no such tagfile...");
+		debugf("no such tagfile...");
 		return 1;
 	}
 
@@ -201,12 +223,10 @@ int query_tagfile(FILE *stream,const char *path,const char *name){
 			char **array=NULL;
 			split(line,&array,&count);
 			if(count>=2 && !strcmp(name,array[0])){
-//				filter_array((void ***)&array,sizeof(char *),&count,&filter_blank_and_null);
 				struct tagrow row;
 				make_tagrow(array,count,&row);
 				for(int n=0;n<row.len;++n){
 					if(strlen(row.tags[n])){
-//						puts(array[n]);
 						fprintf(stream,"%s\n",row.tags[n]);
 					}
 				}
@@ -268,12 +288,12 @@ int tag_tagfile(FILE *stream,char *path,char *name,char **tags,int tagc){
 		}
 		fclose(tagf);
 	}else{
-		printf("couldn\'t open .tags for reading...\n");
+		debugf("couldn\'t open .tags for reading...\n");
 	}
 
 
 	if(!found){//out file isn't currently in the file list...
-		printf("we didn't find the file...");
+		debugf("the file wasn't listed in the .tags file\n");
 		if(llen>=lsize){
 			resize((void **)&lines,sizeof(struct tagrow),lsize,lsize+1);
 		}
@@ -296,49 +316,23 @@ int tag_tagfile(FILE *stream,char *path,char *name,char **tags,int tagc){
 		if(tags[n]==NULL || !strlen(tags[n])){continue;}
 		switch(tags[n][0]){
 			case '-':
-				printf("removing tag [%s] from row [%s]\n",tags[n],lines[offset].name);
-				filter_array((void ***)&lines[offset].tags,sizeof(char *),&lines[offset].len,(void *)tags[n]+1,&full_negative);
+				modify_tagrow(&lines[offset],tags[n]+1,2);
 				break;
 
 			case ':':
-				printf("removing tag [%s] from row [%s]\n",tags[n],lines[offset].name);
-				filter_array((void ***)&lines[offset].tags,sizeof(char *),&lines[offset].len,(void *)tags[n]+1,&partial_positive);
+				modify_tagrow(&lines[offset],tags[n]+1,3);
 				break;
 
 			case '.':
-				printf("removing tag [%s] from row [%s]\n",tags[n],lines[offset].name);
-				filter_array((void ***)&lines[offset].tags,sizeof(char *),&lines[offset].len,(void *)tags[n]+1,&partial_negative);
+				modify_tagrow(&lines[offset],tags[n]+1,4);
 				break;
 
 			case '+':
-				for(int m=0;m<lines[offset].len;++m){
-					if(!strcmp(lines[offset].tags[m],tags[n]+1)){
-						printf("can't add duplicate +tag...\n");
-						trip=1;
-						break;
-					}
-				}
-				if(!trip){
-					resize((void**)&(lines[offset].tags),sizeof(char**),lines[offset].len,lines[offset].len+1);
-					lines[offset].len++;
-					lines[offset].tags[lines[offset].len-1]=calloc(sizeof(char),strlen(tags[n]+1)+1);
-					strcpy(lines[offset].tags[lines[offset].len-1],tags[n]+1);
-				}
+				modify_tagrow(&lines[offset],tags[n]+1,1);
 				break;
+
 			default:
-				for(int m=0;m<lines[offset].len;++m){
-					if(!strcmp(lines[offset].tags[m],tags[n])){
-						printf("can't add duplicate tag...\n");
-						trip=1;
-						break;
-					}
-				}
-				if(!trip){
-					resize((void**)&(lines[offset].tags),sizeof(char**),lines[offset].len,lines[offset].len+1);
-					lines[offset].len++;
-					lines[offset].tags[lines[offset].len-1]=calloc(sizeof(char),strlen(tags[n])+1);
-					strcpy(lines[offset].tags[lines[offset].len-1],tags[n]);
-				}
+				modify_tagrow(&lines[offset],tags[n],1);
 				break;
 		}
 	}
@@ -346,7 +340,7 @@ int tag_tagfile(FILE *stream,char *path,char *name,char **tags,int tagc){
 
 
 	if((tagf=fopen(path,"w"))!=NULL){
-		printf("writing to .tags\n");
+		debugf("writing to .tags\n");
 		for(int n=0;n<llen;++n){
 			if(lines[n].len>=1){
 				fprintf(tagf,"%s",lines[n].name);
@@ -368,16 +362,19 @@ int tag_tagfile(FILE *stream,char *path,char *name,char **tags,int tagc){
 		}
 		fclose(tagf);
 	}else{
-		printf("couldn\'t open .tags for writing...\n");
+		debugf("couldn\'t open .tags for writing...\n");
 	}
 
 
-//	printf("data summary:\n");
-	for(int n=0;n<llen;++n){
+//	for(int n=0;n<llen;++n){
 //		printf("[%s]:\n",lines[n].name);
-		for(int m=0;m<lines[n].len;++m){
-			fprintf(stream,"%s\n",lines[n].tags[m]);
-		}
+//		for(int m=0;m<lines[n].len;++m){
+//			fprintf(stream,"\t%s\n",lines[n].tags[m]);
+//		}
+//	}
+
+	for(int m=0;m<lines[offset].len;++m){
+		fprintf(stream,"%s\n",lines[offset].tags[m]);
 	}
 
 	for(int n=0;n<llen;++n){
@@ -481,10 +478,10 @@ int match_tagrow(struct tagrow *row,char **tags,int tagc){
 
 int search_tagfile(char *path,char *dir,char **tags,int tagc){
 
-	int llen=0,lsize=16;
+//	int llen=0,lsize=16;
 //	struct tagrow *lines=calloc(sizeof(struct tagrow),lsize);
-	int offset=0;
-	int found=0;
+//	int offset=0;
+//	int found=0;
 
 	FILE *tagf=NULL;
 	if((tagf=fopen(path,"r"))!=NULL){
