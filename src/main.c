@@ -1,15 +1,16 @@
 #ifndef _TAG_C_
 #define _TAG_C_
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#define DEBUG 0
+#include "debug.h"
 #include "tag.h"
-//#define DEBUG 1
-//#include "debug.h"
+#include "res.h"
 
 
 int main(int argc,char **argv){
-
 
 	if(argc<2){
 		//error, missing parameters
@@ -19,12 +20,12 @@ int main(int argc,char **argv){
 	}
 
 	if(!strcmp(argv[1],"--help")){
-		//help text
+		printf(help_text);
 		return 0;
 	}
 
 	if(!strcmp(argv[1],"--version")){
-		//version text
+		printf(version_text);
 		return 0;
 	}
 
