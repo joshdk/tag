@@ -17,7 +17,7 @@ int resize(void **ptr,int size,int osize,int nsize){
 
 
 
-int split(char *line,char ***array,int *count){
+int split(char *line,char delim,char ***array,int *count){
 	int alen=0,asize=1;
 	(*array)=malloc(asize*sizeof(char *));
 
@@ -33,35 +33,26 @@ int split(char *line,char ***array,int *count){
 		wb=0;
 
 		if(mode==0){//normal character mode
-			switch(c){
-				case '\\':
-					mode=1;
-					break;
-				case ':'://delimeter found
-					alen++;
-					if(alen>=asize){
-						resize((void**)&(*array),sizeof(char*),asize,asize*2);
-						asize*=2;
-					}
-					slen=0;
-					ssize=1;
-					(*array)[alen]=calloc(ssize,sizeof(char));
-					break;
-				default:
-					wb=1;
-					break;
+			if(c=='\\'){
+				mode=1;
+			}else if(c==delim){
+				alen++;
+				if(alen>=asize){
+					resize((void**)&(*array),sizeof(char*),asize,asize*2);
+					asize*=2;
+				}
+				slen=0;
+				ssize=1;
+				(*array)[alen]=calloc(ssize,sizeof(char));
+			}else{
+				wb=1;
 			}
 
 		}else if(mode==1){//escape character mode
-			switch(c){
-				case ':':
-					wb=1;
-					break;
-				case '\\':
-					wb=1;
-					break;
-				default:
-					break;
+			if(c==delim){
+				wb=1;
+			}else if(c=='\\'){
+				wb=1;
 			}
 			mode=0;
 		}

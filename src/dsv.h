@@ -6,9 +6,10 @@
 #include <string.h>
 
 
-extern int resize(void **,int,int,int);
-extern int split(char *,char ***,int *);
-extern int readline(FILE *,char **,int *);
+int resize(void **,int,int,int);
+int split(char *,char,char ***,int *);
+int readline(FILE *,char **,int *);
+//int writeline(FILE *,char,char **,int *);
 
 
 #endif

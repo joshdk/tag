@@ -4,13 +4,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define DEBUG 0
-#include "debug.h"
+//#define DEBUG 1
+//#include "debug.h"
 #include "tag.h"
 #include "res.h"
-
+#include "dsv.h"
+//#include <linux/limits.h>
 
 int main(int argc,char **argv){
+
+//printf("PATH_MAX: [%d]\n",PATH_MAX);
+//printf("NAME_MAX: [%d]\n",NAME_MAX);
 
 	if(argc<2){
 		//error, missing parameters
@@ -40,6 +44,8 @@ int main(int argc,char **argv){
 		char *path=NULL;
 		char *name=NULL;
 		if(get_path_and_name(argv[argc-1],&path,&name)){
+			resize((void **)&path,sizeof(char),strlen(path),strlen(path)+8);
+			strcat(path,".tags");
 			tag_tagfile(stdout,path,name,argv+2,argc-3);
 			free(path);
 			free(name);
@@ -60,6 +66,9 @@ int main(int argc,char **argv){
 		char *path=NULL;
 		char *name=NULL;
 		if(get_path_and_name(argv[argc-1],&path,&name)){
+			resize((void **)&path,sizeof(char),strlen(path),strlen(path)+8);
+			strcat(path,".tags");
+//			printf("target: [%s]\n",path);
 			query_tagfile(stdout,path,name);
 			free(path);
 			free(name);

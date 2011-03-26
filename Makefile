@@ -2,7 +2,7 @@ CC        = gcc
 CFLAGS    = -std=c99 -Wall -Wextra
 TARGET    = build/tag
 SOURCE    = src/*
-INSTALL   = /usr/bin/
+INSTALL_DIR   = /usr/bin/
 SUCCESS_MSG = "  [\e[32m DONE \e[0m]"
 
 all: build
@@ -24,7 +24,7 @@ rebuild: clean build
 
 install: build
 	@echo "Installing target:"
-	@cp -f $(TARGET) $(INSTALL_DIR)
+	cp -f $(TARGET) $(INSTALL_DIR)
 	@echo -e $(SUCCESS_MSG)
 
 uninstall:

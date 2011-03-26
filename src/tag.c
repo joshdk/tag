@@ -50,7 +50,7 @@ int get_path_and_name(const char *target,char **path,char **name){
 	if(S_ISDIR(info.st_mode)){
 		*path=calloc(1,strlen(target)+7);
 		strcpy(*path,target);
-		strcat(*path,"/.tags");
+//		strcat(*path,"/");
 		*name=calloc(sizeof(char),2);
 		strcat(*name,".");
 	}else if(S_ISREG(info.st_mode) || S_ISCHR(info.st_mode) || S_ISBLK(info.st_mode) || S_ISLNK(info.st_mode)){
@@ -58,7 +58,7 @@ int get_path_and_name(const char *target,char **path,char **name){
 		char *temp2=dirname(temp);
 		*path=calloc(sizeof(char),strlen(temp2)+7);
 		strcpy(*path,temp2);
-		strcat(*path,"/.tags");
+		strcat(*path,"/");
 		free(temp);
 
 		temp=strdup(target);
@@ -66,7 +66,6 @@ int get_path_and_name(const char *target,char **path,char **name){
 		*name=calloc(sizeof(char),strlen(temp2)+1);
 		strcpy(*name,temp2);
 		free(temp);
-		//			printf("path:[%s/.tags] base:[%s]\n",path,base);
 	}else{
 //		puts("unknown");
 		return 0;
@@ -75,40 +74,6 @@ int get_path_and_name(const char *target,char **path,char **name){
 	return 1;
 }
 
-
-
-//int filter_blank_and_null(void *val,int size,int piece,void *un1){
-//	char *str=(char *)val;
-//	debugf("filter_blank_and_null(%s)\n",str);
-//	if(str==NULL || !strlen(str)){
-//		return 1;
-//	}
-//	return 0;
-//}
-
-
-
-//int filter_array(void ***array,int size,int *count,void *val,int (*match)(void *,int,int,void *)){
-//	int rlen=0,rsize=*count;
-//	void **result=calloc(size,rsize);
-//	for(int n=0;n<rsize;++n){
-//		if(!(*match)(   *((*array)+n),rsize,n,val    )    ){
-//			result[rlen++]=*((*array)+n);
-//		}else{
-//			free(*((*array)+n));
-//		}
-//	}
-//	
-////	for(int n=0;n<rlen;++n){
-////		printf("new array: [%s]\n",*(result+n));
-////	}
-//
-//	free(*array);
-//	*array=result;
-//	*count=rlen;
-//
-//	return 0;
-//}
 
 
 int modify_tagrow(struct tagrow *row,char *tag,int action){
@@ -156,6 +121,7 @@ int modify_tagrow(struct tagrow *row,char *tag,int action){
 					break;
 			}
 			if(!remove)continue;
+			free(row->tags[n]);
 			for(int m=n+1;m<row->len;++m){
 				row->tags[m-1]=row->tags[m];
 			}
@@ -184,7 +150,7 @@ int query_tagfile(FILE *stream,const char *path,const char *name){
 			//			printf("[%s](%d)\n",line,len);
 			int count;
 			char **array=NULL;
-			split(line,&array,&count);
+			split(line,':',&array,&count);
 			if(count>=2 && !strcmp(name,array[0])){
 				struct tagrow row;
 				make_tagrow(array,count,&row);
@@ -228,7 +194,7 @@ int tag_tagfile(FILE *stream,char *path,char *name,char **tags,int tagc){
 			if(len){
 				int count;
 				char **array=NULL;
-				split(line,&array,&count);
+				split(line,':',&array,&count);
 				if(count>=2 && strlen(array[0])){//if there is data in the line, add to th list
 					make_tagrow(array,count,&lines[llen]);
 					if(!strcmp(lines[llen].name,name)){//found the row we're looking for
@@ -359,8 +325,6 @@ int match_tagrow(struct tagrow *row,char **tags,int tagc){
 
 	int pass=0;
 	int valid=0;
-//	printf("scanning file [%s]\n",row->name);
-//	printf("tagc count: [%d]\n",tagc);
 
 	for(int n=0;n<tagc;++n){
 		switch(tags[n][0]){//switch on modifier
@@ -437,7 +401,16 @@ int match_tagrow(struct tagrow *row,char **tags,int tagc){
 
 
 
-int search_tagfile(char *path,char *dir,char **tags,int tagc){
+int search_tagfile(char *path,char **tags,int tagc){
+
+//TODO: extract directory name from path
+
+char *dir=NULL,*name=NULL;
+if(!get_path_and_name(path,&dir,&name)){
+	return 0;
+}
+
+//printf("search: [%s] [%s]\n",dir,name);
 
 //	int llen=0,lsize=16;
 //	struct tagrow *lines=calloc(sizeof(struct tagrow),lsize);
@@ -455,7 +428,7 @@ int search_tagfile(char *path,char *dir,char **tags,int tagc){
 			if(len){
 				int count;
 				char **array=NULL;
-				split(line,&array,&count);
+				split(line,':',&array,&count);
 				if(count>=2 && strlen(array[0])){//if there is data in the line, add to th list
 					struct tagrow row;
 					make_tagrow(array,count,&row);
@@ -491,7 +464,8 @@ int search_tagfile(char *path,char *dir,char **tags,int tagc){
 	}else{
 //		printf("couldn\'t open %s for reading...\n",path);
 	}
-
+	free(dir);dir=NULL;
+	free(name);name=NULL;
 
 	return 0;
 }
@@ -502,45 +476,44 @@ int search_tagfile(char *path,char *dir,char **tags,int tagc){
 
 
 
-void search(char *path,char **tags,int tagc){
+int search(char **path,int len,int *size,char **tags,int tagc){
+//	printf("inside: [%s]\n",*path);
 
 	struct dirent *dp;
 	struct stat s;
 	DIR *dir;
+	int count=0;
 
-	if((dir=opendir(path))==NULL){return;}
+	if((dir=opendir(*path))==NULL){return 0;}
 
 	while((dp=readdir(dir))!=NULL){
 
 		if(!strcmp(dp->d_name,".") || !strcmp(dp->d_name,".."))continue;
 
-		char *temp=malloc((strlen(path)+strlen(dp->d_name)+4)*sizeof(*temp));
-		sprintf(temp,"%s%s",path,dp->d_name);
-
-		lstat(temp,&s);
-//		printf("[%s]\n",temp);
-
+		if((*size)<=(int)(len+strlen(dp->d_name))){
+			resize((void **)&(*path),sizeof(char),*size,(len)+strlen(dp->d_name)+4);
+			(*size)=len+strlen(dp->d_name)+4;
+		}
+		strcat(*path,dp->d_name);
+		(*path)[len+strlen(dp->d_name)]='\0';
+		lstat(*path,&s);
 		if(S_ISREG(s.st_mode)){//if it's regular file
 			if(!strcmp(dp->d_name,".tags")){
-				debugf("^-- found one\n");
-//				FILE *ftags;
-//				if((ftags=fopen(temp,"rb"))!=NULL){search_tagfile(path,tags,tagc,ftags);}
-//				fclose(ftags);
-				search_tagfile(temp,path,tags,tagc);
-
+				search_tagfile(*path,tags,tagc);
+				count++;
 			}
 		}else if(S_ISDIR(s.st_mode) && !S_ISLNK(s.st_mode)){//if it's a directory
-				strcat(temp,"/");
-				search(temp,tags,tagc);
+			strcat(*path,"/");
+			(*path)[len+strlen(dp->d_name)+1]='\0';
+			count+=search(path,len+strlen(dp->d_name)+1,size,tags,tagc);
 		}
 
-		free(temp);
-
+		(*path)[len]='\0';
 
 	}
+
 	closedir(dir);
-
-
+	return count;
 }
 
 
@@ -553,16 +526,21 @@ int find_tagfile(char *dir,char **tags,int tagc){
 	if(lstat(dir,&info)!=0)return 0;
 	if(!S_ISDIR(info.st_mode))return 0;
 
-	char *path=calloc(sizeof(char),strlen(dir)+8);
+	int len=strlen(dir),size=len+1024;
+	char *path=calloc(sizeof(char),size);
 	strcpy(path,dir);
-	if(path[strlen(path)-1]!='/'){
+	if(path[len-1]!='/'){
 		strcat(path,"/");
+		len++;
 	}
-	search(path,tags,tagc);
+	search(&path,len,&size,tags,tagc);
 	free(path);
 
 	return 1;
 }
+
+
+
 
 
 #endif

@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <libgen.h>
 #include <dirent.h>
+//#define DEBUG 1
 #include "debug.h"
 
 
@@ -21,16 +22,16 @@ struct tagrow{
 	int len;
 };
 
-extern int make_tagrow(char **,int,struct tagrow *);
-extern int free_tagrow(struct tagrow *);
-extern int get_path_and_name(const char *,char **,char **);
-extern int modify_tagrow(struct tagrow *,char *,int);
-extern int query_tagfile(FILE *,const char *,const char *);
-extern int tag_tagfile(FILE *stream,char *,char *,char **,int);
-extern int match_tagrow(struct tagrow *,char **,int);
-extern int search_tagfile(char *path,char *,char **,int);
-extern void search(char *,char **,int);
-extern int find_tagfile(char *,char **,int);
+int make_tagrow(char **,int,struct tagrow *);
+int free_tagrow(struct tagrow *);
+int get_path_and_name(const char *,char **,char **);
+int modify_tagrow(struct tagrow *,char *,int);
+int query_tagfile(FILE *,const char *,const char *);
+int tag_tagfile(FILE *stream,char *,char *,char **,int);
+int match_tagrow(struct tagrow *,char **,int);
+//int search_tagfile(char *path,char *,char **,int);
+//int search(char *,char **,int);
+int find_tagfile(char *,char **,int);
 
 
 #endif
