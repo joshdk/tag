@@ -1,7 +1,9 @@
-TARGET    = tag.1.gz
-SOURCE    = tag.1
-INSTALL_DIR = /usr/share/man/man1/
-SUCCESS_MSG = "  [\e[32m DONE \e[0m]"
+SOURCE             = tag.1
+TARGET             = tag.1.gz
+INSTALL_DIR        = /usr/share/man/man1
+
+SUCCESS_MSG        = "  [\e[32m DONE \e[0m]"
+
 
 all: build
 
@@ -26,7 +28,7 @@ install: build
 
 uninstall:
 	@echo "Uninstalling tag manpage:"
-	@rm -f $(INSTALL_DIR)$(TARGET)
+	@rm -f $(INSTALL_DIR)/$(TARGET)
 	@echo -e $(SUCCESS_MSG)
 
 

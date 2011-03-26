@@ -3,5 +3,6 @@ test/
 test/*
 build/
 build/*
+man/*.gz
 *.swp
 */*.swp

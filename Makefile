@@ -1,13 +1,16 @@
-CC        = gcc
-CFLAGS    = -std=c99 -Wall -Wextra
-TARGET    = build/tag
-SOURCE    = src/*
-INSTALL_DIR   = /usr/bin/
-SUCCESS_MSG = "  [\e[32m DONE \e[0m]"
+SOURCE             = src/*
+TARGET             = build/tag
+INSTALL_DIR        = /usr/bin
+
+SUCCESS_MSG        = "  [\e[32m DONE \e[0m]"
+
+CC                 = gcc
+CFLAGS             = -std=c99 -Wall -Wextra
+
 
 all: build
 
-build: $(TARGET)
+build: $(TARGET) 
 
 $(TARGET): $(SOURCE)
 	@echo "Building target:"
@@ -17,25 +20,18 @@ $(TARGET): $(SOURCE)
 
 clean:
 	@echo "Cleaning workspace:"
-	@rm -rf build/
+	@rm -rf $(TARGET)
 	@echo -e $(SUCCESS_MSG)
 
 rebuild: clean build
 
 install: build
 	@echo "Installing target:"
-	cp -f $(TARGET) $(INSTALL_DIR)
+	@cp -f $(TARGET) $(INSTALL_DIR)
 	@echo -e $(SUCCESS_MSG)
 
 uninstall:
 	@echo "Uninstalling target:"
-	@rm -f $(INSTALL_DIR)$(TARGET)
+	@rm -f $(INSTALL_DIR)/$(TARGET)
 	@echo -e $(SUCCESS_MSG)
-
-archive: build
-	@echo "Archiving source:"
-	#@rm -f archive.tar.bz2
-	#@tar -cjf archive.tar.bz2 $(SOURCE) Makefile README*
-	@echo -e $(SUCCESS_MSG)
-
 
