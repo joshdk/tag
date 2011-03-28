@@ -7,7 +7,7 @@ Main installation
 Inside of the main directory, run:
 
     $ make
-    $ make install
+    # make install
 
 
 Manpage installation
@@ -16,7 +16,7 @@ Manpage installation
 Inside of the `man/` directory, run:
 
     $ make
-    $ make install
+    # make install
 
 License
 -------
