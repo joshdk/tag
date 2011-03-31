@@ -6,10 +6,7 @@
 #include <string.h>
 
 
-int resize(void **,int,int,int);
 int split(char *,char,char ***,int *);
-int readline(FILE *,char **,int *);
-//int writeline(FILE *,char,char **,int *);
 
 
 #endif

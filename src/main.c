@@ -9,12 +9,9 @@
 #include "tag.h"
 #include "res.h"
 #include "dsv.h"
-//#include <linux/limits.h>
+#include "util.h"
 
 int main(int argc,char **argv){
-
-//printf("PATH_MAX: [%d]\n",PATH_MAX);
-//printf("NAME_MAX: [%d]\n",NAME_MAX);
 
 	if(argc<2){
 		//error, missing parameters

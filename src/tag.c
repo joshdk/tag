@@ -3,6 +3,7 @@
 
 #include "dsv.h"
 #include "tag.h"
+#include "util.h"
 
 
 int make_tagrow(char **array,int alen,struct tagrow *row){
