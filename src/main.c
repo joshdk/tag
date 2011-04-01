@@ -41,7 +41,14 @@ int main(int argc,char **argv){
 		char *path=NULL;
 		char *name=NULL;
 		if(get_path_and_name(argv[argc-1],&path,&name)){
-			resize((void **)&path,sizeof(char),strlen(path),strlen(path)+8);
+//			resize((void **)&path,sizeof(char),strlen(path),strlen(path)+8);
+
+			char *temp=NULL;
+			if((temp=realloc(path,strlen(path)+8))!=NULL){
+				path=temp;
+				temp=NULL;
+			}
+
 			strcat(path,".tags");
 			tag_tagfile(stdout,path,name,argv+2,argc-3);
 			free(path);
@@ -63,7 +70,14 @@ int main(int argc,char **argv){
 		char *path=NULL;
 		char *name=NULL;
 		if(get_path_and_name(argv[argc-1],&path,&name)){
-			resize((void **)&path,sizeof(char),strlen(path),strlen(path)+8);
+//			resize((void **)&path,sizeof(char),strlen(path),strlen(path)+8);
+
+			char *temp=NULL;
+			if((temp=realloc(path,strlen(path)+8))!=NULL){
+				path=temp;
+				temp=NULL;
+			}
+
 			strcat(path,".tags");
 //			printf("target: [%s]\n",path);
 			query_tagfile(stdout,path,name);

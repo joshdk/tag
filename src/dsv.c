@@ -23,7 +23,7 @@ int split(char *line,char delim,char ***array,int *count){
 		if(mode==0){//normal character mode
 			if(c=='\\'){
 				mode=1;
-			}else if(c==delim){
+			}else if(c==delim){//found a field seperator
 				alen++;
 				if(alen>=asize){
 					resize((void**)&(*array),sizeof(char*),asize,asize*2);
