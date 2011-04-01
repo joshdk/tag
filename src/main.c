@@ -42,7 +42,7 @@ int main(int argc,char **argv){
 		char *name=NULL;
 		if(get_path_and_name(argv[argc-1],&path,&name)){
 			char *temp=NULL;
-			if((temp=realloc(path,strlen(path)+8))!=NULL){//reallocate, making room for the ".tags" concat
+			if((temp=realloc(path,sizeof(char)*strlen(path)+8))!=NULL){//reallocate, making room for the ".tags" concat
 				path=temp;
 				temp=NULL;
 			}
@@ -71,7 +71,7 @@ int main(int argc,char **argv){
 		char *name=NULL;
 		if(get_path_and_name(argv[argc-1],&path,&name)){
 			char *temp=NULL;
-			if((temp=realloc(path,strlen(path)+8))!=NULL){//reallocate, making room for the ".tags" concat
+			if((temp=realloc(path,sizeof(char)*strlen(path)+8))!=NULL){//reallocate, making room for the ".tags" concat
 				path=temp;
 				temp=NULL;
 			}
