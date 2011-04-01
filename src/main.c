@@ -14,7 +14,6 @@
 int main(int argc,char **argv){
 
 	if(argc<2){
-		//error, missing parameters
 		fprintf(stderr,"tag: mising operand\n");
 		fprintf(stderr,"Try `tag --help' for more information.\n");
 		return 1;
@@ -29,27 +28,26 @@ int main(int argc,char **argv){
 		printf(version_text);
 		return 0;
 	}
-
+	
+	/*missing argument*/
 	if(argc<3){
 		fprintf(stderr,"tag: mising operand\n");
 		fprintf(stderr,"Try `tag --help' for more information.\n");
 		return 1;
 	}
 
-
+	/*file tagging mode*/
 	if(!strcmp(argv[1],"-t")){
 		char *path=NULL;
 		char *name=NULL;
 		if(get_path_and_name(argv[argc-1],&path,&name)){
-//			resize((void **)&path,sizeof(char),strlen(path),strlen(path)+8);
-
 			char *temp=NULL;
-			if((temp=realloc(path,strlen(path)+8))!=NULL){
+			if((temp=realloc(path,strlen(path)+8))!=NULL){//reallocate, making room for the ".tags" concat
 				path=temp;
 				temp=NULL;
 			}
-
 			strcat(path,".tags");
+
 			tag_tagfile(stdout,path,name,argv+2,argc-3);
 			free(path);
 			free(name);
@@ -60,26 +58,25 @@ int main(int argc,char **argv){
 			return 1;
 		}
 
+	/*file searching mode*/
 	}else if(!strcmp(argv[1],"-f")){
 		if(!find_tagfile(argv[argc-1],argv+2,argc-3)){
 			fprintf(stderr,"tag: `%s\' no such directory\n",argv[argc-1]);
 			return 1;
 		}
 
+	/*file querying mode*/
 	}else if(!strcmp(argv[1],"-q")){
 		char *path=NULL;
 		char *name=NULL;
 		if(get_path_and_name(argv[argc-1],&path,&name)){
-//			resize((void **)&path,sizeof(char),strlen(path),strlen(path)+8);
-
 			char *temp=NULL;
-			if((temp=realloc(path,strlen(path)+8))!=NULL){
+			if((temp=realloc(path,strlen(path)+8))!=NULL){//reallocate, making room for the ".tags" concat
 				path=temp;
 				temp=NULL;
 			}
-
 			strcat(path,".tags");
-//			printf("target: [%s]\n",path);
+
 			query_tagfile(stdout,path,name);
 			free(path);
 			free(name);
@@ -90,6 +87,7 @@ int main(int argc,char **argv){
 			return 1;
 		}
 
+	/*bad arguments*/
 	}else{
 		fprintf(stderr,"tag: invalid operand\n");
 		fprintf(stderr,"Try `tag --help' for more information.\n");
