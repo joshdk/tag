@@ -2,7 +2,6 @@
 #define _DSV_C_
 
 #include "dsv.h"
-#include "util.h"
 
 
 int split(char *line,char delim,char ***array,int *count){
@@ -26,7 +25,11 @@ int split(char *line,char delim,char ***array,int *count){
 			}else if(c==delim){//found a field seperator
 				alen++;
 				if(alen>=asize){
-					resize((void**)&(*array),sizeof(char*),asize,asize*2);
+					char **temp=NULL;
+					if((temp=realloc(*array,sizeof(char *)*asize*2))!=NULL){
+						*array=temp;
+						temp=NULL;
+					}
 					asize*=2;
 				}
 				slen=0;
@@ -48,7 +51,11 @@ int split(char *line,char delim,char ***array,int *count){
 		if(wb==1){//writeback a character
 			wb=0;
 			if(slen>=ssize-1){
-				resize((void**)&(*array)[alen],sizeof(char),ssize,ssize*2);
+				char *temp=NULL;
+				if((temp=realloc((*array)[alen],sizeof(char)*ssize*2))!=NULL){
+					(*array)[alen]=temp;
+					temp=NULL;
+				}
 				ssize*=2;
 			}
 			(*array)[alen][slen]=c;
