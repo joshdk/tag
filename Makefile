@@ -5,7 +5,7 @@ INSTALL_DIR        = /usr/bin
 SUCCESS_MSG        = "  [\e[32m DONE \e[0m]"
 
 CC                 = gcc
-CFLAGS             = -std=c99 -Wall -Wextra
+CFLAGS             = -std=c99 -Wall -Wextra -g
 
 
 all: build

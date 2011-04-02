@@ -8,6 +8,7 @@
 
 int make_tagrow(char **array,int alen,struct tagrow *row){
 	if(alen<1)return 0;
+//	row->name=NULL;
 	row->name=calloc(sizeof(char),strlen(array[0])+1);
 	strcpy(row->name,array[0]);
 	if(alen<2)return 0;
@@ -431,7 +432,7 @@ if(!get_path_and_name(path,&dir,&name)){
 				char **array=NULL;
 				split(line,':',&array,&count);
 				if(count>=2 && strlen(array[0])){//if there is data in the line, add to th list
-					struct tagrow row;
+					struct tagrow row={NULL,NULL,0};
 					make_tagrow(array,count,&row);
 					struct stat info;//={0};
 					char *full=calloc(sizeof(char),strlen(dir)+strlen(row.name)+1);
@@ -493,6 +494,15 @@ int search(char **path,int len,int *size,char **tags,int tagc){
 
 		if((*size)<=(int)(len+strlen(dp->d_name))){
 			resize((void **)&(*path),sizeof(char),*size,(len)+strlen(dp->d_name)+4);
+//			char *temp=NULL;
+//			if((temp=realloc(*path,sizeof(char)*(len+strlen(dp->d_name)+4)))!=NULL){
+//				printf("realloc\n");
+//				*path=temp;
+//				temp=NULL;
+//			}
+
+
+
 			(*size)=len+strlen(dp->d_name)+4;
 		}
 		strcat(*path,dp->d_name);
