@@ -8,7 +8,7 @@ int split(char *line,char delim,char ***array,int *count){
 	int alen=0,asize=1;
 	(*array)=malloc(asize*sizeof(char *));
 
-	int slen=0,ssize=32;
+	int slen=0,ssize=1;
 	(*array)[alen]=calloc(ssize,sizeof(char));
 
 	int mode=0;
@@ -26,7 +26,7 @@ int split(char *line,char delim,char ***array,int *count){
 				alen++;
 				if(alen>=asize){
 					char **temp=NULL;
-					if((temp=realloc(*array,sizeof(char *)*asize*2))!=NULL){
+					if((temp=realloc(*array,sizeof(char *)*(asize*2)))!=NULL){
 						*array=temp;
 						temp=NULL;
 					}
@@ -52,7 +52,9 @@ int split(char *line,char delim,char ***array,int *count){
 			wb=0;
 			if(slen>=ssize-1){
 				char *temp=NULL;
-				if((temp=realloc((*array)[alen],sizeof(char)*ssize*2))!=NULL){
+				if((temp=calloc(sizeof(char),ssize*2))!=NULL){
+					strcpy(temp,(*array)[alen]);
+					free((*array)[alen]);
 					(*array)[alen]=temp;
 					temp=NULL;
 				}
