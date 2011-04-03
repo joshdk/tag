@@ -93,8 +93,12 @@ int modify_tagrow(struct tagrow *row,char *tag,int action){
 			}
 		}
 		if(trip)return 0;//duplicate tag. no point in adding it again...
-
-		resize((void**)&(row->tags),sizeof(char**),row->len,row->len+1);
+//		resize((void**)&(row->tags),sizeof(char**),row->len,row->len+1);
+		char **temp=NULL;
+		if((temp=realloc(row->tags,sizeof(char **)*(row->len+1)))!=NULL){
+			row->tags=temp;
+			temp=NULL;
+		}
 		row->len++;
 		row->tags[row->len-1]=calloc(sizeof(char),strlen(tag)+1);
 		strcpy(row->tags[row->len-1],tag);
@@ -181,7 +185,7 @@ int query_tagfile(FILE *stream,const char *path,const char *name){
 
 int tag_tagfile(FILE *stream,char *path,char *name,char **tags,int tagc){
 
-	int llen=0,lsize=16;
+	int llen=0,lsize=1;
 	struct tagrow *lines=calloc(sizeof(struct tagrow),lsize);
 	int offset=0;
 	int found=0;
@@ -197,16 +201,21 @@ int tag_tagfile(FILE *stream,char *path,char *name,char **tags,int tagc){
 				int count;
 				char **array=NULL;
 				split(line,':',&array,&count);
-				if(count>=2 && strlen(array[0])){//if there is data in the line, add to th list
+				if(count>=2 && strlen(array[0])){//if there is data in the line, add to the list
+					if(llen>=lsize){
+//						resize((void **)&lines,sizeof(struct tagrow),lsize,lsize*2);
+						struct tagrow *temp=NULL;
+						if((temp=realloc(lines,sizeof(struct tagrow)*(lsize*2)))!=NULL){
+							lines=temp;
+							temp=NULL;
+						}
+						lsize*=2;
+					}
 					make_tagrow(array,count,&lines[llen]);
 					if(!strcmp(lines[llen].name,name)){//found the row we're looking for
 						offset=llen;
 						found=1;
 					}
-					if(llen>=lsize){
-						resize((void **)&lines,sizeof(struct tagrow),lsize,lsize*2);
-					}
-					lsize*=2;
 					llen++;
 				}
 				for(int n=0;n<count;++n){
@@ -226,9 +235,14 @@ int tag_tagfile(FILE *stream,char *path,char *name,char **tags,int tagc){
 	if(!found){//out file isn't currently in the file list...
 		debugf("the file wasn't listed in the .tags file\n");
 		if(llen>=lsize){
-			resize((void **)&lines,sizeof(struct tagrow),lsize,lsize+1);
+//			resize((void **)&lines,sizeof(struct tagrow),lsize,lsize+1);
+			struct tagrow *temp=NULL;
+			if((temp=realloc(lines,sizeof(struct tagrow)*(lsize+1)))!=NULL){
+				lines=temp;
+				temp=NULL;
+			}
+			lsize+=1;
 		}
-		lsize+=1;
 		lines[llen].name=calloc(sizeof(char),strlen(name)+1);
 		strcpy(lines[llen].name,name);
 		lines[llen].len=0;
@@ -493,16 +507,12 @@ int search(char **path,int len,int *size,char **tags,int tagc){
 		if(!strcmp(dp->d_name,".") || !strcmp(dp->d_name,".."))continue;
 
 		if((*size)<=(int)(len+strlen(dp->d_name))){
-			resize((void **)&(*path),sizeof(char),*size,(len)+strlen(dp->d_name)+4);
-//			char *temp=NULL;
-//			if((temp=realloc(*path,sizeof(char)*(len+strlen(dp->d_name)+4)))!=NULL){
-//				printf("realloc\n");
-//				*path=temp;
-//				temp=NULL;
-//			}
-
-
-
+//			resize((void **)&(*path),sizeof(char),*size,(len)+strlen(dp->d_name)+4);
+			char *temp=NULL;
+			if((temp=realloc(*path,sizeof(char)*(len+strlen(dp->d_name)+4)))!=NULL){
+				*path=temp;
+				temp=NULL;
+			}
 			(*size)=len+strlen(dp->d_name)+4;
 		}
 		strcat(*path,dp->d_name);
