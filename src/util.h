@@ -1,12 +1,12 @@
-#ifndef _DSV_H_
-#define _DSV_H_
+#ifndef _UTIL_H_
+#define _UTIL_H_
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 
-int split(char *,char,char ***,int *);
+int readline(FILE *,char **,int *);
 
 
 #endif

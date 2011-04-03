@@ -11,6 +11,7 @@
 #include <dirent.h>
 //#define DEBUG 1
 #include "debug.h"
+#include "util.h"
 
 
 int lstat(const char *, struct stat *); 
