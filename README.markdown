@@ -1,10 +1,18 @@
 tag - simple yet powerful keyword based file searching
 ======================================================
 
-Main installation
+Download
+--------
+
+The full git repository is at: <git://github.com/sigint/tag.git> Get it using the following command:
+
+    $ git clone git://github.com/sigint/tag.git
+
+
+Program installation
 -----------------
 
-Inside of the main directory, run:
+Inside of the `tag/` directory, run:
 
     $ make
     # make install
@@ -13,7 +21,7 @@ Inside of the main directory, run:
 Manpage installation
 -----------------
 
-Inside of the `man/` directory, run:
+Inside of the `tag/man/` directory, run:
 
     $ make
     # make install
