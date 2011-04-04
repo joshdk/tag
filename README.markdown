@@ -3,23 +3,30 @@ tag - simple yet powerful keyword based file searching
 
 Getting the Source
 ------------------
-*   **Source tarball**
+*   **Source tarball:**
+
     The full git repository is at: <https://github.com/sigint/tag/>
 
-*   **Git clone**
-    To clone this project, run
+*   **Git clone:**
+
+    To clone this project directly, run:
+
         $ git clone git://github.com/sigint/tag.git
 
 
 Building & Installing
 -----------------
-*   **Main program**
+*   **Main program:**
+
     Inside of the `tag/` directory, run:
+
         $ make
         # make install
 
-*   **Manpage documentation**
+*   **Manpage documentation:**
+
     Inside of the `tag/man/` directory, run:
+
         $ make
         # make install
 
