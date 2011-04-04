@@ -1,45 +1,29 @@
 tag - simple yet powerful keyword based file searching
 ======================================================
 
-Download
---------
+Getting the Source
+------------------
+*   **Source tarball**
+    The full git repository is at: <https://github.com/sigint/tag/>
 
-The full git repository is at: <git://github.com/sigint/tag.git> Get it using the following command:
+*   **Git clone**
+    To clone this project, run
+        $ git clone git://github.com/sigint/tag.git
 
-    $ git clone git://github.com/sigint/tag.git
 
-
-Program installation
+Building & Installing
 -----------------
+*   **Main program**
+    Inside of the `tag/` directory, run:
+        $ make
+        # make install
 
-Inside of the `tag/` directory, run:
-
-    $ make
-    # make install
-
-
-Manpage installation
------------------
-
-Inside of the `tag/man/` directory, run:
-
-    $ make
-    # make install
+*   **Manpage documentation**
+    Inside of the `tag/man/` directory, run:
+        $ make
+        # make install
 
 License
 -------
-
-Copyright © 2011 Josh Komoroske
-
-License BSD:
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL JOSHUA KOMOROSKE BE LIABLE FOR ANY
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+Copyright 2011 Josh Komoroske BSD License (enclosed)
 
