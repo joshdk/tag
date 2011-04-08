@@ -5,7 +5,7 @@ Getting the Source
 ------------------
 *   **Source tarball:**
 
-    The full git repository is at: <https://github.com/sigint/tag/>
+    Github repository located at: <https://github.com/sigint/tag/>
 
 *   **Git clone:**
 
