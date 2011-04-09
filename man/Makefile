@@ -1,6 +1,6 @@
 SOURCE             = tag.1
 TARGET             = tag.1.gz
-INSTALL_DIR        = /usr/share/man/man1
+INSTALL            = /usr/share/man/man1/tag.1.gz
 
 SUCCESS_MSG        = '  [\e[32m DONE \e[0m]'
 
@@ -23,12 +23,12 @@ rebuild: clean build
 
 install: build
 	@echo 'Installing tag manpage:'
-	@cp -f $(TARGET) $(INSTALL_DIR)
+	@cp -f $(TARGET) $(INSTALL)
 	@echo -e $(SUCCESS_MSG)
 
 uninstall:
 	@echo 'Uninstalling tag manpage:'
-	@rm -f $(INSTALL_DIR)/$(TARGET)
+	@rm -f $(INSTALL)
 	@echo -e $(SUCCESS_MSG)
 
 

@@ -1,6 +1,6 @@
 SOURCE             = src/*
 TARGET             = build/tag
-INSTALL_DIR        = /usr/bin
+INSTALL            = /usr/bin/tag
 
 SUCCESS_MSG        = '  [\e[32m DONE \e[0m]'
 
@@ -27,11 +27,11 @@ rebuild: clean build
 
 install: build
 	@echo 'Installing target:'
-	@cp -f $(TARGET) $(INSTALL_DIR)
+	@cp -f $(TARGET) $(INSTALL)
 	@echo -e $(SUCCESS_MSG)
 
 uninstall:
 	@echo 'Uninstalling target:'
-	@rm -f $(INSTALL_DIR)/$(TARGET)
+	@rm -f $(INSTALL)
 	@echo -e $(SUCCESS_MSG)
 
