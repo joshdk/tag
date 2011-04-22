@@ -15,7 +15,7 @@ build: $(TARGET)
 $(TARGET): $(SOURCE)
 	@echo 'Building target:'
 	@mkdir -p build/
-	@$(CC) $(CFLAGS) -o $(TARGET) $(SOURCE)
+	@$(CC) $(CFLAGS) $^ -o $@
 	@echo -e $(SUCCESS_MSG)
 
 clean:
