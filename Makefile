@@ -21,6 +21,7 @@ $(TARGET): $(SOURCE)
 clean:
 	@echo 'Cleaning workspace:'
 	@rm -rf $(TARGET)
+	@rm -rf build/
 	@echo -e $(SUCCESS_MSG)
 
 rebuild: clean build
