@@ -14,12 +14,12 @@ build: $(TARGET)
 
 $(TARGET): $(OUTFILES) src/debug.h src/res.h
 	@echo 'Building target:'
-	$(CC) $(CFLAGS) $^ -o $@
+	@$(CC) $(CFLAGS) $^ -o $@
 	@echo -e $(SUCCESS_MSG)
 
 build/%.o: src/%.c
 	@mkdir -p build/
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	@echo 'Cleaning workspace:'
