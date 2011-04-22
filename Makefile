@@ -10,7 +10,7 @@ CFLAGS             = -std=c99 -Wall -Wextra -g
 
 all: build
 
-build: $(TARGET) 
+build: $(TARGET)
 
 $(TARGET): $(SOURCE)
 	@echo 'Building target:'
@@ -20,7 +20,6 @@ $(TARGET): $(SOURCE)
 
 clean:
 	@echo 'Cleaning workspace:'
-	@rm -rf $(TARGET)
 	@rm -rf build/
 	@echo -e $(SUCCESS_MSG)
 
