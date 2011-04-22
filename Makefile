@@ -1,4 +1,4 @@
-SOURCE             = src/*
+OUTFILES           = build/main.o build/dsv.o build/tag.o build/util.o
 TARGET             = build/tag
 INSTALL            = /usr/bin/tag
 
@@ -12,11 +12,14 @@ all: build
 
 build: $(TARGET)
 
-$(TARGET): $(SOURCE)
+$(TARGET): $(OUTFILES) src/debug.h src/res.h
 	@echo 'Building target:'
-	@mkdir -p build/
-	@$(CC) $(CFLAGS) $^ -o $@
+	$(CC) $(CFLAGS) $^ -o $@
 	@echo -e $(SUCCESS_MSG)
+
+build/%.o: src/%.c
+	@mkdir -p build/
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	@echo 'Cleaning workspace:'
