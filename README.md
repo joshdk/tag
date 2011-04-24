@@ -5,13 +5,13 @@ Getting the Source
 ------------------
 *   **Source tarball:**
 
-    Github repository located at: <https://github.com/sigint/tag/>
+    Github repository located at: <https://github.com/joshdk/tag/>
 
 *   **Git clone:**
 
     To clone this project directly, run:
 
-        $ git clone git://github.com/sigint/tag.git
+        $ git clone git://github.com/joshdk/tag.git
 
 
 Building & Installing
