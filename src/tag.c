@@ -384,25 +384,6 @@ int match_tagrow(struct tagrow *row,char **tags,int tagc){
 				
 				break;
 
-//			case ':':
-//				for(int m=0;m<row->len;++m){
-//					if(strstr(row->tags[m],tags[n]+1)){//found one
-//						valid=1;//this row is marked as valid(:)
-//						break;
-//					}
-//				}
-//				
-//				break;
-//
-//			case '.':
-//				for(int m=0;m<row->len;++m){
-//					if(strstr(row->tags[m],tags[n]+1)){//found one
-//						return 0;//failed on banned(.)
-//					}
-//				}
-//				
-//				break;
-
 		}
 	}
 
