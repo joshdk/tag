@@ -347,7 +347,7 @@ int match_tagrow(struct tagrow *row,char **tags,int tagc){
 			case '+':
 				pass=0;
 				for(int m=0;m<row->len;++m){
-					if(!strcmp(tags[n]+1,row->tags[m])){//found one
+					if(!fnmatch(tags[n]+1,row->tags[m],0)){//found one
 						pass=1;
 						valid=1;
 						break;
