@@ -17,6 +17,10 @@ $(TARGET): $(OUTFILES) src/debug.h src/res.h
 	@$(CC) $(CFLAGS) $^ -o $@
 	@echo -e $(SUCCESS_MSG)
 
+build/main.o: src/main.c src/debug.h src/res.h
+	@mkdir -p build/
+	@$(CC) $(CFLAGS) -c $< -o $@
+
 build/%.o: src/%.c
 	@mkdir -p build/
 	@$(CC) $(CFLAGS) -c $< -o $@
