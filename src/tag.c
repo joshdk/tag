@@ -1,6 +1,7 @@
 #ifndef _TAG_C_
 #define _TAG_C_
 
+#include <fnmatch.h>
 #include "dsv.h"
 #include "tag.h"
 
@@ -357,7 +358,7 @@ int match_tagrow(struct tagrow *row,char **tags,int tagc){
 
 			case '-':
 				for(int m=0;m<row->len;++m){
-					if(!strcmp(tags[n]+1,row->tags[m])){//found one
+					if(!fnmatch(tags[n]+1,row->tags[m],0)){//found one
 						return 0;//failed on banned(-) tag
 					}
 				}
@@ -365,7 +366,7 @@ int match_tagrow(struct tagrow *row,char **tags,int tagc){
 
 			case '~':
 				for(int m=0;m<row->len;++m){
-					if(!strcmp(tags[n]+1,row->tags[m])){//found one
+					if(!fnmatch(tags[n]+1,row->tags[m],0)){//found one
 						valid=1;//this row is marked as valid(+)
 						break;
 					}
@@ -373,34 +374,35 @@ int match_tagrow(struct tagrow *row,char **tags,int tagc){
 				
 				break;
 
-			case ':':
-				for(int m=0;m<row->len;++m){
-					if(strstr(row->tags[m],tags[n]+1)){//found one
-						valid=1;//this row is marked as valid(:)
-						break;
-					}
-				}
-				
-				break;
-
-			case '.':
-				for(int m=0;m<row->len;++m){
-					if(strstr(row->tags[m],tags[n]+1)){//found one
-						return 0;//failed on banned(.)
-					}
-				}
-				
-				break;
-
 			default:
 				for(int m=0;m<row->len;++m){
-					if(!strcmp(tags[n],row->tags[m])){//found one
+					if(!fnmatch(tags[n],row->tags[m],0)){//found one
 						valid=1;
 						break;
 					}
 				}
 				
 				break;
+
+//			case ':':
+//				for(int m=0;m<row->len;++m){
+//					if(strstr(row->tags[m],tags[n]+1)){//found one
+//						valid=1;//this row is marked as valid(:)
+//						break;
+//					}
+//				}
+//				
+//				break;
+//
+//			case '.':
+//				for(int m=0;m<row->len;++m){
+//					if(strstr(row->tags[m],tags[n]+1)){//found one
+//						return 0;//failed on banned(.)
+//					}
+//				}
+//				
+//				break;
+
 		}
 	}
 
