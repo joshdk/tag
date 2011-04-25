@@ -14,7 +14,7 @@ Options:\n\
       --version   display version info\n";
 
 const char version_text[]="\
-tag 2.1.0\n\
+tag 2.3.0\n\
 Copyright (C) 2010, Joshua Komoroske\n\
 License BSD: New BSD License.\n";
 
