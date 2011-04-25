@@ -83,7 +83,7 @@ int modify_tagrow(struct tagrow *row,char *tag,int action){
 	debugf("running against [%s] with [%d]\n",tag,action);
 	debugf("tag count [%d]\n",row->len);
 
-	if(action==1){
+	if(action==1){//add a tag
 		int trip=0;
 		for(int n=0;n<row->len;++n){
 			if(!strcmp(row->tags[n],tag)){
@@ -103,25 +103,20 @@ int modify_tagrow(struct tagrow *row,char *tag,int action){
 		row->tags[row->len-1]=calloc(sizeof(char),strlen(tag)+1);
 		strcpy(row->tags[row->len-1],tag);
 		debugf("adding tag [%s]\n",tag);
-	}else if(action==2 || action==3 || action==4){
+
+	}else if(action==2 || action==3){
 		for(int n=0;n<row->len;++n){
 			int remove=0;
 			switch(action){
 				case 2:
-					if(!strcmp(row->tags[n],tag)){
+					if(!fnmatch(tag,row->tags[n],0)){
 						debugf("removing tag -[%s]\n",row->tags[n]);
 						remove=1;
 					}
 					break;
 				case 3:
-					if(strstr(row->tags[n],tag)){
+					if(fnmatch(tag,row->tags[n],0)){
 						debugf("removing tag :[%s]\n",row->tags[n]);
-						remove=1;
-					}
-					break;
-				case 4:
-					if(!strstr(row->tags[n],tag)){
-						debugf("removing tag .[%s]\n",row->tags[n]);
 						remove=1;
 					}
 					break;
@@ -258,25 +253,25 @@ int tag_tagfile(FILE *stream,char *path,char *name,char **tags,int tagc){
 		trip=0;
 		if(tags[n]==NULL || !strlen(tags[n])){continue;}
 		switch(tags[n][0]){
+			case '+':
+				modify_tagrow(&lines[offset],tags[n]+1,1);
+				break;
+
 			case '-':
 				modify_tagrow(&lines[offset],tags[n]+1,2);
 				break;
 
-			case ':':
+			case '~':
 				modify_tagrow(&lines[offset],tags[n]+1,3);
-				break;
-
-			case '.':
-				modify_tagrow(&lines[offset],tags[n]+1,4);
-				break;
-
-			case '+':
-				modify_tagrow(&lines[offset],tags[n]+1,1);
 				break;
 
 			default:
 				modify_tagrow(&lines[offset],tags[n],1);
 				break;
+
+//			case '.':
+//				modify_tagrow(&lines[offset],tags[n]+1,4);
+//				break;
 		}
 	}
 
