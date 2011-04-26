@@ -5,10 +5,10 @@ tag \- simple yet powerful keyword based file searching
 
 .SH SYNOPSIS
 .B tag
-\fI-t\fR [[\fIMODIFIER\fR]\fIKEYWORD\fR]... \fIFILE\fR|\fIDIRECTORY\fR
+\fI-t\fR \fIFILE\fR|\fIDIRECTORY\fR [[\fIMODIFIER\fR]\fIPATTERN\fR]...
 .br
 .B tag
-\fI-f\fR [[\fIMODIFIER\fR]\fIKEYWORD\fR]... \fIDIRECTORY\fR
+\fI-f\fR \fIDIRECTORY\fR [[\fIMODIFIER\fR]\fIPATTERN\fR]...
 .br
 .B tag
 \fI-q\fR \fIFILE\fR|\fIDIRECTORY\fR
@@ -20,10 +20,10 @@ tag \- simple yet powerful keyword based file searching
 .\" Add any additional description here
 .TP
 \fB\-t\fR
-tag a file or directory with the specified keywords
+add or remove keywords associated with a specified file or directory
 .TP
 \fB\-f\fR
-search for files and directories that have been tagged with the specified keywords
+search for files or directories that have been tagged with specified keywords
 .TP
 \fB\-q\fR
 query what keywords are associated with a file or directory
@@ -46,60 +46,66 @@ will add the keyword
 .B KEYWORD 
 to the specified file if it has not already been added.
 .TP
-.B -KEYWORD
-will remove the keyword
-.B KEYWORD 
-from the specified file if it has already been added.
+.B -PATTERN
+will remove any keywords that match
+.B PATTERN
+from the specified file or directory.
 .TP
-.B :KEYWORD
-will remove any keyword that contains
-.B KEYWORD 
-as a substring.
-.TP
-.B .KEYWORD
-will remove any keyword that does not contains
-.B KEYWORD 
-as a substring.
+.B ~PATTERN
+will remove any keyword that do not match
+.B PATTERN
+from the specified file or directory.
 
 .SS "File Searching"
-.TP
-.B +KEYWORD
-will match any file that is tagged with 
-.B "KEYWORD,"
-but will reject any file that is not.
-.TP
-.B ~KEYWORD (or just KEYWORD)
-will match any file that is tagged with 
-.B "KEYWORD"
-.TP
-.BR -KEYWORD
-will reject any file that contains the keyword
-.BR "KEYWORD"
-.TP
-.BR :KEYWORD
-will match any file that contains the keyword
-.BR "KEYWORD" 
-as a substring.
-.TP
-.BR .KEYWORD
-will reject any file that contains the keyword
-.BR "KEYWORD" 
-as a substring.
 
-.SS "Useful Tricks"
 .TP
-.B "tag -f : DIRECTORY"
-will list all files that have been tagged, inside of 
-.B DIRECTORY
+.B +PATTERN
+Says that a file must be tagged with a keyword that matches
+.B PATTERN
+
 .TP
-.B "tag -t : FILE"
-will remove all keywords associated with 
-.B TARGET
+.BR -PATTERN
+Says that a file must not be tagged with a keyword that matches
+.BR PATTERN
+
+.TP
+.B ~PATTERN (or just PATTERN)
+Says that a file can be tagged with a keyword that matches
+.B PATTERN
+
+.SS "Examples"
+.TP
+.B "$ tag -f ./ +tag1 +tag2"
+will list all files that are tagged with 
+.B tag1
+\fIand\fR
+.B tag2
+inside the current directory.
+
+.TP
+.B "$ tag -f ./ ~tag1 tag2"
+will list all files that are tagged with 
+.B tag1
+\fIor\fR
+.B tag2
+inside the current directory.
+
+.TP
+.B "$ tag -f ./ '*'"
+will list all files that are tagged inside the current directory.
+
+.TP
+.B "$ tag -f ./ '*' -tag1"
+will list all files that are not tagged with 
+.B tag1
+inside the current directory.
+
+
 
 .SH AUTHOR
 Written by Josh Komoroske.
 .br
-tag source code repository: <https://github.com/sigint/tag>
+tag source code repository: <https://github.com/joshdk/tag>
 
 .SH COPYRIGHT
 Copyright \(co 2011 Josh Komoroske
