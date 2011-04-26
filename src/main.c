@@ -40,7 +40,7 @@ int main(int argc,char **argv){
 	if(!strcmp(argv[1],"-t")){
 		char *path=NULL;
 		char *name=NULL;
-		if(get_path_and_name(argv[argc-1],&path,&name)){
+		if(get_path_and_name(argv[2],&path,&name)){
 			char *temp=NULL;
 			if((temp=realloc(path,sizeof(char)*strlen(path)+8))!=NULL){//reallocate, making room for the ".tags" concat
 				path=temp;
@@ -48,7 +48,7 @@ int main(int argc,char **argv){
 			}
 			strcat(path,".tags");
 
-			tag_tagfile(stdout,path,name,argv+2,argc-3);
+			tag_tagfile(stdout,path,name,argv+3,argc-3);
 			free(path);
 			free(name);
 		}else{
@@ -60,8 +60,8 @@ int main(int argc,char **argv){
 
 	/*file searching mode*/
 	}else if(!strcmp(argv[1],"-f")){
-		if(!find_tagfile(argv[argc-1],argv+2,argc-3)){
-			fprintf(stderr,"tag: `%s\' no such directory\n",argv[argc-1]);
+		if(!find_tagfile(argv[2],argv+3,argc-3)){
+			fprintf(stderr,"tag: `%s\' no such directory\n",argv[2]);
 			return 1;
 		}
 
@@ -69,7 +69,7 @@ int main(int argc,char **argv){
 	}else if(!strcmp(argv[1],"-q")){
 		char *path=NULL;
 		char *name=NULL;
-		if(get_path_and_name(argv[argc-1],&path,&name)){
+		if(get_path_and_name(argv[2],&path,&name)){
 			char *temp=NULL;
 			if((temp=realloc(path,sizeof(char)*strlen(path)+8))!=NULL){//reallocate, making room for the ".tags" concat
 				path=temp;
@@ -81,7 +81,7 @@ int main(int argc,char **argv){
 			free(path);
 			free(name);
 		}else{
-			fprintf(stderr,"tag: `%s\' no such file or directory\n",argv[argc-1]);
+			fprintf(stderr,"tag: `%s\' no such file or directory\n",argv[2]);
 			free(path);
 			free(name);
 			return 1;
