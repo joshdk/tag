@@ -73,7 +73,8 @@ Says that a file must not be tagged with a keyword that matches
 Says that a file can be tagged with a keyword that matches
 .B PATTERN
 
-.SS "Examples"
+.SH EXAMPLES
+.SS "File Searching"
 .TP
 .B "$ tag -f ./ +tag1 +tag2"
 will list all files that are tagged with 
@@ -88,11 +89,11 @@ will list all files that are tagged with
 .B tag1
 \fIor\fR
 .B tag2
-inside the current directory.
+under the current directory.
 
 .TP
 .B "$ tag -f ./ '*'"
-will list all files that are tagged inside the current directory.
+will list \fIall\fR files that are tagged under the current directory.
 
 .TP
 .B "$ tag -f ./ '*' -tag1"
