@@ -284,6 +284,7 @@ int tag_tagfile(FILE *stream,char *path,char *name,char **tags,int tagc){
 	}
 
 
+	qsort(lines[offset].tags,lines[offset].len,sizeof(char *),compare);//sort output
 
 	if((tagf=fopen(path,"w"))!=NULL){
 		debugf("writing to .tags\n");
