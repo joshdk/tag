@@ -23,6 +23,7 @@ struct tagrow{
 	int len;
 };
 
+int compare(const void *, const void *);
 int make_tagrow(char **,int,struct tagrow *);
 int free_tagrow(struct tagrow *);
 int get_path_and_name(const char *,char **,char **);

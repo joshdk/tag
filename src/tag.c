@@ -4,6 +4,13 @@
 #include <fnmatch.h>
 #include "dsv.h"
 #include "tag.h"
+#include "strnatcmp.h"
+
+
+int compare(const void *a, const void *b){
+	char const *pa = *(char const **)a, *pb = *(char const **)b;
+	return strnatcmp(pa,pb);
+}
 
 
 int make_tagrow(char **array,int alen,struct tagrow *row){
@@ -155,6 +162,7 @@ int query_tagfile(FILE *stream,const char *path,const char *name){
 			if(count>=2 && !strcmp(name,array[0])){
 				struct tagrow row;
 				make_tagrow(array,count,&row);
+				qsort(array,count,sizeof(char *),compare);//sort output
 				for(int n=0;n<row.len;++n){
 					if(strlen(row.tags[n])){
 						fprintf(stream,"%s\n",row.tags[n]);

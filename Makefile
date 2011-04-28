@@ -1,4 +1,4 @@
-OUTFILES           = build/dsv.o build/main.o build/tag.o build/util.o
+OUTFILES           = build/dsv.o build/main.o build/tag.o build/util.o build/strnatcmp.o
 TARGET             = build/tag
 INSTALL            = /usr/bin/tag
 
