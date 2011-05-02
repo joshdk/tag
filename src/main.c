@@ -41,6 +41,7 @@ int main(int argc,char **argv){
 		char *path=NULL;
 		char *name=NULL;
 		if(get_path_and_name(argv[2],&path,&name)){
+			printf("path:[%s]\n",path);
 			char *temp=NULL;
 			if((temp=realloc(path,sizeof(char)*strlen(path)+8))!=NULL){//reallocate, making room for the ".tags" concat
 				path=temp;
@@ -52,7 +53,7 @@ int main(int argc,char **argv){
 			free(path);
 			free(name);
 		}else{
-			fprintf(stderr,"tag: `%s\' no such file or directory\n",argv[argc-1]);
+			fprintf(stderr,"tag: `%s\' no such file or directory\n",argv[2]);
 			free(path);
 			free(name);
 			return 1;
