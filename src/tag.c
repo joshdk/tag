@@ -59,8 +59,8 @@ int get_path_and_name(const char *target,char **path,char **name){
 	if(S_ISDIR(info.st_mode)){
 		*path=calloc(1,strlen(target)+7);
 		strcpy(*path,target);
-		if(path[strlen(target)-1]!='/'){
-			strcat(path,"/");
+		if(*path[strlen(target)-1]!='/'){
+			strcat(*path,"/");
 		}
 		*name=calloc(sizeof(char),2);
 		strcat(*name,".");
