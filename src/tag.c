@@ -59,7 +59,9 @@ int get_path_and_name(const char *target,char **path,char **name){
 	if(S_ISDIR(info.st_mode)){
 		*path=calloc(1,strlen(target)+7);
 		strcpy(*path,target);
-//		strcat(*path,"/");
+		if(path[strlen(target)-1]!='/'){
+			strcat(path,"/");
+		}
 		*name=calloc(sizeof(char),2);
 		strcat(*name,".");
 	}else if(S_ISREG(info.st_mode) || S_ISCHR(info.st_mode) || S_ISBLK(info.st_mode) || S_ISLNK(info.st_mode)){
